@@ -6,11 +6,26 @@
 		<h2>Task 1</h2>
 		<p>
 		To rasterize the triangles, we first computed the bounding box for the triangle. This was done by looking at the min and max x and y values across all vertices.
+		Thus, our algorithm is no slower than looking at every point in the bounding box, since this is what we did.
 		We then perform three line tests for each point in the bounding box, first assuming a counterclockwise orientation and then a clockwise orientation for the edges of the triangle.
-		If the point was found to be inside the triangle for either of the orientations, or on one of the edges of the triangle, we fill the pixel.
+		If the point was found to be inside the triangle for either of the orientations, we fill the pixel.
+		We also implemented the OpenGL edge rules. To do this, we looked at the case where pixels lay on an edge. Then, we determined if it was a top edge by seeing if the two 
+		y values of the edge were equal. To see if it was a left edge, we saw if the edge "went up" (y1<y2) in the counterclockwise case or "went down" (y1>y2) in the
+		clockwise case, since this characterizes a left edge. In these two cases, we fill the pixel. Else, we left it blank.
 		</p>
+		<h3> Test 4 </h3>
 		<img src="test4_green.png" width="791" height="592">
 		
-		<h2>Task 23</h2>
+		<h2>Task 2</h2>
+		To supersample, we used an array, sample_buffer, of size width * height * sample_rate. Then, we sampled the image at sqrt(sample_rate) by sqrt(sample_rate)
+		points per pixel, saving the color at each point in the sample buffer. Then, after doing this for all triangles, we average color values that are in the
+		same pixel within the sample_buffer, and save this averaged value to the frame buffer.
+		<h3> Test 4, Sample Rate 1 </h3>
+		<img src="test4_ss1.png" width="791" height="592">
+		<h3> Test 4, Sample Rate 4 </h3>
+		<img src="test4_ss4.png" width="791" height="592">
+		<h3> Test 4, Sample Rate 16 </h3>
+		<img src="test4_ss16.png" width="791" height="592">
+		
 	</body>
 </html>
