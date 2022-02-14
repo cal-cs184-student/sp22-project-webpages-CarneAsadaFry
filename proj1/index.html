@@ -21,11 +21,13 @@
 		points per pixel, saving the color at each point in the sample buffer. Then, after doing this for all triangles, we average color values that are in the
 		same pixel within the sample_buffer, and save this averaged value to the frame buffer.
 		<h3> Test 4, Sample Rate 1 </h3>
-		<img src="test4_ss1.png" width="791" height="592">
+		<img src="test4_1ss.png" width="791" height="592">
 		<h3> Test 4, Sample Rate 4 </h3>
-		<img src="test4_ss4.png" width="791" height="592">
+		<img src="test4_4ss.png" width="791" height="592">
 		<h3> Test 4, Sample Rate 16 </h3>
-		<img src="test4_ss16.png" width="791" height="592">
-		
+		<img src="test4_16ss.png" width="791" height="592">
+		We see a difference because super sampling approximates a box blur, and a box blur has the effect of removing high frequencies which will lower
+		the Nyquist rate of the image to a point closer to our sampling frequency. When we sample far below the Nyquist rate, we get aliasing which
+		we notice in the image. So, by eliminiating the high frequencies, some of the aliasing is also eliminated and the image looks better to us.
 	</body>
 </html>
