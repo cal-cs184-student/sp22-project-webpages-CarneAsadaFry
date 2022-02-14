@@ -17,17 +17,18 @@
 		<img src="test4_green.png" width="791" height="592">
 		
 		<h2>Task 2</h2>
-		To supersample, we used an array, sample_buffer, of size width * height * sample_rate. Then, we sampled the image at sqrt(sample_rate) by sqrt(sample_rate)
+		<p>To supersample, we used an array, sample_buffer, of size width * height * sample_rate. Then, we sampled the image at sqrt(sample_rate) by sqrt(sample_rate)
 		points per pixel, saving the color at each point in the sample buffer. Then, after doing this for all triangles, we average color values that are in the
-		same pixel within the sample_buffer, and save this averaged value to the frame buffer.
+		same pixel within the sample_buffer, and save this averaged value to the frame buffer.</p>
 		<h3> Test 4, Sample Rate 1 </h3>
 		<img src="test4_1ss.png" width="791" height="592">
 		<h3> Test 4, Sample Rate 4 </h3>
 		<img src="test4_4ss.png" width="791" height="592">
 		<h3> Test 4, Sample Rate 16 </h3>
 		<img src="test4_16ss.png" width="791" height="592">
-		We see a difference because super sampling approximates a box blur, and a box blur has the effect of removing high frequencies which will lower
+		
+		<p>We see a difference because super sampling approximates a box blur, and a box blur has the effect of removing high frequencies, which will lower
 		the Nyquist rate of the image to a point closer to our sampling frequency. When we sample far below the Nyquist rate, we get aliasing which
-		we notice in the image. So, by eliminiating the high frequencies, some of the aliasing is also eliminated and the image looks better to us.
+		we notice in the image. So, by eliminiating the high frequencies, some of the aliasing is also eliminated and the image looks better to us.</p>
 	</body>
 </html>
