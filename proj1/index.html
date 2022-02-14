@@ -2,6 +2,12 @@
 	<head>
 	</head>
 	<body>
-		Project 1 here
+		<h1>Project 1</h1>
+		<h2>Task 1</h2>
+		<p>
+		To rasterize the triangles, we first computed the bounding box for the triangle. This was done by looking at the min and max x and y values across all vertices.
+		We then perform three line tests for each point in the bounding box, first assuming a counterclockwise orientation and then a clockwise orientation for the edges of the triangle.
+		If the point was found to be inside the triangle for either of the orientations, or on one of the edges of the triangle, we fill the pixel.
+		</p>
 	</body>
 </html>
