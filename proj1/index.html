@@ -43,5 +43,29 @@
 		<img src="triangle.png" width="791" height="592">
 		<h3> Test 7 </h3>
 		<img src="test7.png" width="791" height="592">	
+			
+		<h2> Task 5 </h2>
+		<p>In pixel sampling, we take a triangle that has texture coordinates (uv coordinates) associated with each vertex. Then, we interpolate the uv coordinates 
+		across the entire triangle using barycentric coordinate. Thus, each point on the triangle has a uv coordinate associated with it. Then, we sample points
+		on the triangle (either in the center of each pixel or in more places if supersampling is enabled) and use the uv coordinate to get the corresponding
+		color by sampling at those coordinates on the texture. Once we have the color, we can follow the normal supersampling algorithm. 
+		When sampling the color from the texture, we can either use nearest sampling, where we simply take the color of the texel closest to the given uv coordinate,
+		or we can use bilinear sampling, where we take the colors of the four texels closest to the uv coordinate, and then linearly interpolate two pairs, then
+		linearly interpolate the results of the interpolations to get a single color.</p>
+		<h3> Nearest, Supersample rate 1 </h3>
+		<img src="nearest_1ss.png" width="791" height="592">
+		<h3> Bilinear, Supersample rate 1 </h3>
+		<img src="bilinear_1ss.png" width="791" height="592">
+		<h3> Nearest, Supersample rate 16 </h3>
+		<img src="nearest_16ss.png" width="791" height="592">
+		<h3> Bilinear, Supersample rate 16 </h3>
+		<img src="bilinear_16ss.png" width="791" height="592">
+		<p> Comparing the images with supersampling rate 1, we see that the bilinear samplings smooths the high frequency transitions between different
+		colors, which eliminates jaggies and makes the image look better. This happens because we are essentially blurring our sampling of the texels
+		and eliminating high frequency signals which cause aliasing. We also see an improvement in the supersampling rate 16 images for the same reason,
+		but the effect is more subtle because the supersampling already eliminates high frequencies.</p>
+		<p>In general, the bilinear sampling will be better in regions with many high frequencies, such as when there is a quick color transition in
+		the texture image. It works better because the bilinear sampling acts as a blur, as discussed above, and so it eliminates the high frequencies
+		that cause aliasing.</p>
 	</body>
 </html>
