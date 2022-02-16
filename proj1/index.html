@@ -114,13 +114,13 @@
 			do multiple samples from the mipmap if we are using bilinear level sampling. </p>
 			
 		<h3> Level 0, Nearest Pixel </h3>
-		<img src="zero_nearest.png" width="791" height="592">	
+		<img src="z_n.png" width="791" height="592">	
 		<h3> Nearest Level, Nearest Pixel  </h3>
-		<img src="nearest_nearest.png" width="791" height="592">	
+		<img src="n_n.png" width="791" height="592">	
 		<h3> Level 0, Linear Pixel </h3>
-		<img src="zero_linear.png" width="791" height="592">
+		<img src="z_l.png" width="791" height="592">
 		<h3> Nearest Level, Linear Pixel </h3>
-		<img src="nearest_linear.png" width="791" height="592">
+		<img src="n_l.png" width="791" height="592">
 			
 		<p> <a href="https://commons.wikimedia.org/wiki/File:Campanile-cupola-vista_da_piazza_cavour.png">This image</a> is sourced from Wikimedia Commons.
 			We focus on the bottom right corner where the texture map is very compressed. With level 0 sampling and nearest pixel, we see that this region
@@ -129,5 +129,8 @@
 			rest of the tower is still overly pixelated. When we enable linear pixel sampling at level 0, the entire tower becomes smoother because
 			we are blurring across multiple texels and each pixel. Finally, when we also enable nearest level, we see that the most compressed part
 			of the tower is even further smoothed, since this is now sampling from the level 1 mipmap in addition to the linear interpolation.</p>
+			
+		<h2> Link to Website </h2>
+			<a href="https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj1/index.html">https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj1/index.html</a> 
 	</body>
 </html>
