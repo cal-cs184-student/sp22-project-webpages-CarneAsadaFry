@@ -45,7 +45,7 @@
 		<img src="test7.png" width="791" height="592">	
 			
 		<h2> Task 5 </h2>
-		<p>In pixel sampling, we take a triangle that has texture coordinates (uv coordinates) associated with each vertex. Then, we interpolate the uv coordinates 
+		<p>When pixel sampling, we take a triangle that has texture coordinates (uv coordinates) associated with each vertex. Then, we interpolate the uv coordinates 
 		across the entire triangle using barycentric coordinate. Thus, each point on the triangle has a uv coordinate associated with it. Then, we sample points
 		on the triangle (either in the center of each pixel or in more places if supersampling is enabled) and use the uv coordinate to get the corresponding
 		color by sampling at those coordinates on the texture. Once we have the color, we can follow the normal supersampling algorithm. 
@@ -67,5 +67,36 @@
 		<p>In general, the bilinear sampling will be better in regions with many high frequencies, such as when there is a quick color transition in
 		the texture image. It works better because the bilinear sampling acts as a blur, as discussed above, and so it eliminates the high frequencies
 		that cause aliasing.</p>
+			
+		<h2> Task 6 </h2>
+		<p> When level sampling, we use downsized versions of a texture where each pixel is an average version of the pixels around it. Each version has half
+		the sidelengths of the previous one. We store all versions
+		of the texture compactly in a mipmap. The original is level 0, and the levels increase as they get smaller.
+		To level sample, we compute the derivative of the uv coordinates on our triangle with respect to the x and
+		y coordinates of the triangle at the point where we are sampling. We then take the level to be the log of the largest magnitude of a uv derivative,
+		between the ones in the x direction direction and they y direction. When doing nearest level sampling, we round the level calculated to the nearest integer,
+		and then select that version of the image from the mipmap. In bilinear level sampling, we sample from the two nearest levels, and then
+			linearly interpolate their colors. </p>
+		
+		<p>Supersampling uses the most memory and is very slow because we must do many times the work, scaling with the sampling rate. However, it is also the
+		most powerful for anti-aliasing because if smooths the entire image. Pixel mapping uses the least memory because it just involves taking more samples,
+		and so does not increase memory usage significantly. Bilinear pixel mapping takes four times the amount of samples, since we sample the four closest
+		points. We also must lerp the color values, so speed is slow too. Level sampling uses a moderate amount of memory, because to store the mipmap, we must
+			use 4/3 times the amount of memory for the normal texture. It is also somewhat slow because we must calculate the level for each sample, and potentially
+			do multiple samples from the mipmap if we are using bilinear level sampling. </p>
+			
+		<h3> Level 0 </h3>
+		<img src="level0.png" width="791" height="592">	
+		<h3> Nearest Level </h3>
+		<img src="nearest.png" width="791" height="592">	
+		<h3> Bilinear Level </h3>
+		<img src="bilinear.png" width="791" height="592">
+			
+		<p> <a href="https://commons.wikimedia.org/wiki/File:Campanile-cupola-vista_da_piazza_cavour.png">This image</a> is sourced from Wikimedia Commons.
+			We focus on the bottom right corner where the texture map is very compressed. With level 0 sampling, we see that this region
+			is very pixelated because we are sampling with a low frequency on a relatively high frequency texture. When we enable nearest
+			level sampling, the most compressed part of the tower becomes smooth, since it transitioned to the level 1 mipmap, but the
+			rest of the tower is still overly pixelated. When we enable bilinear level sampling, the entire tower becomes more smooth,
+			because the part of the tower in the foreground is now somwhere between level 0 and level 1.</p>
 	</body>
 </html>
