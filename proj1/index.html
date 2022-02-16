@@ -3,14 +3,30 @@
 	</head>
 	<body>
 		<h1>Project 1</h1>
+		<h2>Overview</h2>
+		<p> In this project, we implemented a triangle rasterizer which checks if a given point on the screen is inside a triangle with vertices at given coordinates,
+		and then colors it if it is. We then upgraded this so that we can supersample, which means there will be more points than pixels, and then colors at different
+		points are combined to smooth the image. When then implemented translation, rotation and scaling transforms. Next, we implemented barycentric coordinates which
+		can interpolate colors specified at the vertices of a triangle over the entire triangle. We then implemented pixel sampling from textures, which again uses
+		barycentric coordinates to interpolate texture coordinates over a triangle. We allowed sampling of texels either using the nearest texel or by linearly interpolating
+		the four closest texels. Finally, we implemented level sampling, which uses downscaled versions of a texture stored in a mipmap to apply to parts of an image where
+		the texture is much higher resolution than its positioning on the screen is. We calculate a level using the rate of change of the texture coordinates, and then either
+			sample the mipmap at the nearest level, or interpolate between the two nearest levels.</p>
+			
+		<p>As a whole, we built a triangle rasterizer that implements many different methods of antialiasing, and allows us to compare the relative effects and combined effects
+			of the different methods on different images. In particular, it lets us compare supersampling, pixel sampling for textures, and level sampling for textures.</p>
+		<p> Doing this project helped us better understand the technical details of implementing the theoretical antialiasing algorithms covered in lecture. In particular,
+			it gave us a better understanding of how level sampling works, and how the derivatives can be calculated and then used to give the proper level of the mipmap.
+			It also gave us a better practical understanding of how level sampling and other types of anti-aliasing affect an image, and informed us about when each type
+			really makes a difference.</p>
 		<h2>Task 1</h2>
 		<p>
 		To rasterize the triangles, we first computed the bounding box for the triangle. This was done by looking at the min and max x and y values across all vertices.
 		Thus, our algorithm is no slower than looking at every point in the bounding box, since this is what we did.
 		We then perform three line tests for each point in the bounding box, first assuming a counterclockwise orientation and then a clockwise orientation for the edges of the triangle.
 		If the point was found to be inside the triangle for either of the orientations, we fill the pixel.
-		We also implemented the OpenGL edge rules. To do this, we looked at the case where pixels lay on an edge. Then, we determined if it was a top edge by seeing if the two 
-		y values of the edge were equal. To see if it was a left edge, we saw if the edge "went up" (y1<y2) in the counterclockwise case or "went down" (y1>y2) in the
+		We also implemented the OpenGL edge rules, but later removed them to make sure all edges were rasterized. To do this, we looked at the case where pixels lay on an edge. Then, we determined if it was a top edge by seeing if the two 
+		y values of the edge were equal. To see if it was a left edge, we saw if the edge "went up" (y1 &lt; y2) in the counterclockwise case or "went down" (y1 &gt; y2) in the
 		clockwise case, since this characterizes a left edge. In these two cases, we fill the pixel. Else, we left it blank.
 		</p>
 		<h3> Test 4 </h3>
@@ -18,8 +34,12 @@
 		
 		<h2>Task 2</h2>
 		<p>To supersample, we used an array, sample_buffer, of size width * height * sample_rate. Then, we sampled the image at sqrt(sample_rate) by sqrt(sample_rate)
-		points per pixel, saving the color at each point in the sample buffer. Then, after doing this for all triangles, we average color values that are in the
-		same pixel within the sample_buffer, and save this averaged value to the frame buffer.</p>
+		points per pixel, saving the color at each point in the sample buffer. Then, after doing this for all triangles, we averaged color values that are in the
+		same pixel within the sample_buffer, and save this averaged value to the frame buffer. Supersampling is useful because it can help soften sharp jaggies in an image,
+		which will make it more pleasant to the human eye. It allows us to compensate having a sampling rate that is too low to fully capture an image.
+		We modified the pipeline by first writing to a separate sample buffer, and then averaging down and copying to the frame buffer at the end. 
+		Supersampling removes aliasing by approximating a box blur, which removes the high frequencies from the image and allows it to be sampled better at a lower
+		sampling rate. </p>
 		<h3> Test 4, Sample Rate 1 </h3>
 		<img src="test4_1ss.png" width="791" height="592">
 		<h3> Test 4, Sample Rate 4 </h3>
@@ -38,7 +58,7 @@
 			
 		<h2> Task 4 </h2>
 		<p> The image below helps demonstrate barycentric coordinates. We fix a value (in this case a color) at each vertex of the triangle. Then, at each point,
-		we assign the color to be a linear combination of the colors at the vertices, where the coefficients are the proportional distances of the point from
+		we assign the color to be a convex combination of the colors at the vertices, where the coefficients are the proportional distances of the point from
 		each vertex. So, we get a gradient that smoothly transitions between each vertex of the triangle. </p>
 		<img src="triangle.png" width="791" height="592">
 		<h3> Test 7 </h3>
@@ -85,18 +105,21 @@
 			use 4/3 times the amount of memory for the normal texture. It is also somewhat slow because we must calculate the level for each sample, and potentially
 			do multiple samples from the mipmap if we are using bilinear level sampling. </p>
 			
-		<h3> Level 0 </h3>
-		<img src="level0.png" width="791" height="592">	
-		<h3> Nearest Level </h3>
-		<img src="nearest.png" width="791" height="592">	
-		<h3> Bilinear Level </h3>
-		<img src="bilinear.png" width="791" height="592">
+		<h3> Level 0, Nearest Pixel </h3>
+		<img src="zero_nearest.png" width="791" height="592">	
+		<h3> Nearest Level, Nearest Pixel  </h3>
+		<img src="nearest_nearest.png" width="791" height="592">	
+		<h3> Level 0, Linear Pixel </h3>
+		<img src="zero_linear.png" width="791" height="592">
+		<h3> Nearest Level, Linear Pixel </h3>
+		<img src="nearest_linear.png" width="791" height="592">
 			
 		<p> <a href="https://commons.wikimedia.org/wiki/File:Campanile-cupola-vista_da_piazza_cavour.png">This image</a> is sourced from Wikimedia Commons.
-			We focus on the bottom right corner where the texture map is very compressed. With level 0 sampling, we see that this region
+			We focus on the bottom right corner where the texture map is very compressed. With level 0 sampling and nearest pixel, we see that this region
 			is very pixelated because we are sampling with a low frequency on a relatively high frequency texture. When we enable nearest
-			level sampling, the most compressed part of the tower becomes smooth, since it transitioned to the level 1 mipmap, but the
-			rest of the tower is still overly pixelated. When we enable bilinear level sampling, the entire tower becomes more smooth,
-			because the part of the tower in the foreground is now somwhere between level 0 and level 1.</p>
+			level sampling, the most compressed part of the tower becomes smoother, since it transitioned to the level 1 mipmap, but the
+			rest of the tower is still overly pixelated. When we enable linear pixel sampling at level 0, the entire tower becomes smoother because
+			we are blurring across multiple texels and each pixel. Finally, when we also enable nearest level, we see that the most compressed part
+			of the tower is even further smoothed, since this is now sampling from the level 1 mipmap in addition to the linear interpolation.</p>
 	</body>
 </html>
