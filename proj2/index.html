@@ -31,15 +31,18 @@
 		<img src="teapot.png" width="791" height="592">
 		
 		<h2> Task 3 </h2>
-		To implement area-weighted vertex normals, we first took a half-edge from the vertex. Then, to get each face, we took the face associated
+		<p>To implement area-weighted vertex normals, we first took a half-edge from the vertex. Then, to get each face, we took the face associated
 		with the half edge, then took twin->next before repeating. We stopped when returning to the original half edge. Given each face, we computed
 		the area-weighted normal by computing the sum of the cross products between each pair of vertices along the face (by going around with half edges),
 		which will give us the direction of the normal weighted by area times some constant. Then, to compute the vertex normal, we simply add 
 		these area weighted normals and then make the vector a unit vector, so the additional constant vactor on the area weighted normals does
-		not effect the calculation.
+			not effect the calculation.</p>
 		<h3> Flat Shading </h3>
 		<img src="flat_shading.png" width="791" height="592">	
 		<h3> Phong Shading </h3>
 		<img src="phong_shading.png" width="791" height="592">
+		
+		<h2> Task 4 </h2>
+		
 	</body>
 </html>
