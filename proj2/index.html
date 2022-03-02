@@ -46,19 +46,19 @@
 		We started by making a drawing of an edge and the two triangles it interfaces with. We labeled all relevant quantities.
 		<h3> Diagram </h3>
 		<img src="drawing.jpg" width="398" height="600">
-		If the edge was on the boundary, we immediately returned it and went no futher.
+		<p> If the edge was on the boundary, we immediately returned it and went no futher.
 		If it was not on the boundary, we first fetched all of the relevant quantities using the half edge associated with the edge.
 		Then, we first reassigned next for h, h1, and h4 so they point to each other. We then reassigned next for t (twin of h), h2, and h3 so they also 
 		point in a loop. Then, we changed h4 to have face f1, and made f1 have half edge h1. We also made h2 have face f2 and f2 have half edge h2.
 		Then, we made h have vertex v1 and v1 have half edge h. Finally, we made t have vertex v2 and v2 have half edge t. In the end, we did not
 		have to make any changes to the edge e0, since it was still associated with the same half edge. By making careful use of the diagram,
 		we were able to get all of the rules correct on the first try, so debugging was not necessary for us. Thus, we didn't really develop
-		any significant debugging tricks, besides simply referencing our diagram. 
+			any significant debugging tricks, besides simply referencing our diagram. </p>
 		<h3> Before Flipping </h3>
 		<img src="unflipped.png" width="791" height="592">
 		<h3> After Flipping </h3>
 		<img src="flipped.png" width="791" height="592">
-		The one debugging piece we did have to do was replace CIter with Iter, because we realized that nothing could be changed when using CIters.
+		<p> The one debugging piece we did have to do was replace CIter with Iter, because we realized that nothing could be changed when using CIters. </p>
 		
 	</body>
 </html>
