@@ -2,6 +2,24 @@
 	<head>
 	</head>
 	<body>
-		Project 2 here
+		<h1> Project 2 </h1>
+		<h2> Task 1 </h2>
+		<p>
+			To implement de Casteljau's algorithm, we lerp each pair of adjacent control points
+		that make up the Bezier curve to get new points in between. Then, we lerp each adjacent pair of lerped points, 
+		and we repeat recursively until we only have one point left. This is a point on the Bezier curve.
+		By varying the lerp parameter between 0 and 1, we get all of the points on the Bezier curve. </p>
+		<h3> De Casteljau Example: Cusp </h3>
+		<img src="bzc0.png" width="791" height="592">
+		<img src="bzc1.png" width="791" height="592">
+		<img src="bzc2.png" width="791" height="592">
+		<img src="bzc3.png" width="791" height="592">
+		<img src="bzc4.png" width="791" height="592">
+		<img src="bzc5.png" width="791" height="592">
+		<img src="bzc6.png" width="791" height="592">
+		<h3> Full Example: Cusp </h3>
+		<img src="bzc_full.png" width="791" height="592">
+		<h3> Shifted Cusp, Modified t </h3>
+		<img src="bzc_shift.png" width="791" height="592">
 	</body>
 </html>
