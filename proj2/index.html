@@ -43,7 +43,7 @@
 		<img src="phong_shading.png" width="791" height="592">
 		
 		<h2> Task 4 </h2>
-		We started by making a drawing of an edge and the two triangles it interfaces with. We labeled all relevant quantities.
+		<p>We started by making a drawing of an edge and the two triangles it interfaces with. We labeled all relevant quantities.</p>
 		<h3> Diagram </h3>
 		<img src="drawing.jpg" width="398" height="600">
 		<p> If the edge was on the boundary, we immediately returned it and went no futher.
@@ -60,5 +60,28 @@
 		<img src="flipped.png" width="791" height="592">
 		<p> The one debugging piece we did have to do was replace CIter with Iter, because we realized that nothing could be changed when using CIters. </p>
 		
+		<h2> Task 5 </h2>
+		<p>We started by again making a diagram of an edge and the two triangles it interfaces with, and then expanding that diagram into a diagram of four
+			triangles with split edges. We again labeled all relevant quantities.</p>
+		<h3> Diagram </h3>
+		<img src="drawing2.jpg" width="398" height="600">
+		<p> Again, we immediately returned if an edge was on the boundary. If the edge was not on the boundary, we again first fetched all existing
+			labeeled quantities using the half edge structure, and then we created all the new halfedges, vertices, and so on using the appropriate
+			functions. Then, using the diagram, we went through each object (halfedge, vertex, edge, face) and updated each of its pointers to
+			match with what we had on the diagram. We did not have any major implementation tricks besides using the diagram. As a debugging trick,
+			we used the provided check_for method, to check how many things pointed to each vertex, which ultimately revealed the biggest bug
+			that we encountered in our code.</p>
+		<h3> Before Splitting </h3>
+		<img src="normal.png" width="791" height="592">
+		<h3> After Splitting </h3>
+		<img src="split.png" width="791" height="592">
+		<h3> After Splitting and Flipping </h3>
+		<img src="split_flip.png" width="791" height="592">
+		<p> After implementing the updates in our diagrams, we found that the program would crash upon trying to split an edge. After running through
+			the function, we found that it was only crashing after our function call ended. Next, we used the included check_for function to look
+			at where each of our objects was referenced. When doing this, we found that some vertices were being referenced by 7 halfedges when they
+			should have only been referenced by 6. This made us realize that there was some halfedge which was not gettings its parameters updated.
+			Sure enough, looking back, we realized we had to forgot to update the halfedges h and t in our diagram, and had simply left their original
+			parameters. Fixing this also fixed our bug. Luckily, this was the only serious bug we encountered in this part.</p>
 	</body>
 </html>
