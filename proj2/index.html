@@ -3,6 +3,29 @@
 	</head>
 	<body>
 		<h1> Project 2 </h1>
+		<h2> Overview </h2>
+		<p> We started by implementing de Casteljau's algorithm for Bezier curves, which allows us to recursively generate the curves by lerping control points 
+		with respect to some varying parameter. Then, we implemented the same algorithm for Bezier surfaces, which uses two parameters, and runs the algorithm
+		first along each point in a row to get control points for a perpendicular Bezier curve, and then we run the algorithm to get that curve. By varying
+		both parameters, we move the perpendicular curve and the point along it, recovering the whole surface. In these parts, we learned how
+		the simple lerp subroutine at the center of de Casteljau's algorithm can be repeatedly used to buiild up a more complicated procedure
+		that generates curves and surfaces. </p>
+		<p> Next, we implemented vertex normals for Phong shading. To do this, we calculated weighted normals of adjacent faces to compute the normal
+			at the vertex. This part introduced us to working with the halfedge data structure, and illustrated how the cross product can be used
+			to determine area. Then, we implemented edge flipping, which repositions an edge within the mesh. To do this, we had to make 
+			careful use of the halfedge data structure to reassign necessary pointers. We learned the value of drawing a detailed diagram of the
+			setup to minimize errors. Then, we implemented edge splitting, where we split an edge in half, created a new vertex at the center,
+			and added additional edges connecting the vertex. In this part, we had to reassign pointers in the halfedge data structure and also
+			create new objects and assign their values, and we again found it very valuable to make a detailed diagram to reference while making
+			pointer assignments. We also ran into our first major bug in this portion, which was caused by forgetting to reassign certain values.
+			We learned that it is better to write reassignments in an organized manner so it is easy to make sure everything has been reassigned
+			and nothing was left out. To solve this, we had to carefully examine the pointers to each object in our mesh, and think about
+			which connections should be present.
+			Finally, we implemented loop subdivision, where we split each edge and then flipped certain edges to divide
+			each triangle into four pieces, and then reassigned the positions of each vertex to keep the smoothness of the mesh. We also ran into
+			a major bug where we categorized some old edges that shouldn't be flipped as new, which caused strange outputs. To fix this, we broke
+			down the algorithm into its basic pieces and executed it by hand to compare against the code's output. By looking carefully at the 
+			algorithm, we were able to identify where the issue was and fix it. </p>
 		<h2> Task 1 </h2>
 		<p>
 			To implement de Casteljau's algorithm, we lerp each pair of adjacent control points
@@ -83,5 +106,43 @@
 			should have only been referenced by 6. This made us realize that there was some halfedge which was not gettings its parameters updated.
 			Sure enough, looking back, we realized we had to forgot to update the halfedges h and t in our diagram, and had simply left their original
 			parameters. Fixing this also fixed our bug. Luckily, this was the only serious bug we encountered in this part.</p>
+		
+		<h2> Task 6 </h2>
+		<p> To implement the loop subdivision algorithm, we first used the vertex iterator to calculate the new positions of each old vertex,
+			using the formula from lecture. We stored this position in the newPosition field for later. To do this, we had to iterate over
+			the neighbors of each vertex, which we did with the halfedge data structure. We then iterated over each edge, and stored the position
+			for the new vertex that we would generate once we split the edge. We again used the formula from lecture and used the halfedge
+			data structure to get relevant vertex positions. We stored the position in the newPosition argument. We also used the first two
+			loops to flag each vertex and edge as old vertices and edges, before we added any new components for this run of the algorithm.</p>
+		<p> Next, we again iterated over each edge to split all old edges. To check if an edge was old, we checked if both vertices connected to it were old,
+			to make sure that we did not split any edge which was already split in this run. After splitting the edge, we used the halfedge data structure
+			to flag the new vertex and the new edges which were not part of the split edge as new. We also copied the position for the new vertex from
+			the corresponding edge into the newPosition field. Next, we again iterated over all edges, and flipped
+			any new edge which was connected to one new and one old vertex, as specified in lecture. Finally, we iterated over all vertices and updated
+			their positions using the values stored in the newPosition field. </p>
+		<p> Generally, meshes become smoothed, with the positions of the vertices of the smaller triangles interpolating the positions of the vertices
+			of the original triangles. We give a general example with the torus </p>
+		<h3> Torus Subdivision </h3>
+		<img src="sub0.png" width="791" height="592">
+		<img src="sub1.png" width="791" height="592">
+		<img src="sub2.png" width="791" height="592">
+		<img src="sub3.png" width="791" height="592">
+		<p> In particular, sharp edges and corners tend to become rounded because there is not enough resolution
+			around the sharp corners and edges to keep them from getting smoothed when the new vertices are added. To mitigate this effect,
+			we can perform many splits around the edges and corners, so that there is less smoothing that occurs when we subdivide, and so
+			the edges remain sharp. We give an example of this below. </p>
+		<h3> Torus Subdivision, Partially Sharpened </h3>
+		<img src="sharp0.png" width="791" height="592">
+		<img src="sharp1.png" width="791" height="592">
+		<img src="sharp2.png" width="791" height="592">
+		<img src="sharp3.png" width="791" height="592">
+		<p> When applying loop subdivision to the cube, it becomes asymmetric because the mesh triangles are not symmetric, and so the added vertices
+			are not symmetric and the cube bulges in different places. To correct this, we split the diagonal edges on each face so that the
+			mesh was symmetric before applying the loop subdivision. We see below that this fixed the asymmetry in the subdivided cube. </p>
+		<h3> Symmetric Cube </h3>
+		<img src="even0.png" width="791" height="592">
+		<img src="even1.png" width="791" height="592">
+		<img src="even2.png" width="791" height="592">
+		<img src="even3.png" width="791" height="592">
 	</body>
 </html>
