@@ -15,16 +15,32 @@
 			the estimated illumination, we need to calculate the intersections of our rays with primitive objeccts such as triangles and spheres.
 			We use this to tell when our rays hit various objects in the world, which allows us to create an intersection object that tracks
 			the bsdf of the object hit, as well as where the collision occurs and other information. </p>
-		<p> To implement the triangle intersection, we used the Moller Trumbore algorithm. This uses various vector operations to efficiently calculate the 
+		<p> 
+			To implement the triangle intersection, we used the Moller Trumbore algorithm. This uses various vector operations to efficiently calculate the 
 			parameter t, the time when the ray intersects the plane of the triangle, and b1 and b2, which are two of the coefficients for the barycentric
 			coordinates of the traingle from the parameters of the ray and the vertices of the triangle. Using t, we can first check if the ray actually
 			intersects the plane, and if it does so in the range of interest, and then we can use the barycentric coordinates to check that the ray is
 			inside the triangle, since one of the coordinates will be negative if it is not. If we pass all checks, we intersected the triangle.</p>
+		<p>
+			We now show some simple images with normal shading. </p>
 		<h3> Spheres with Normal Shading </h3>
 		<img src="spheres_task1.png" width="480" height="360">
 		<h3> Cow with Normal Shading </h3>
 		<img src="cow_task1.png" width="480" height="360">
+		<h2> Part 2 </h2>
+		<p>
+			Given an iterator over primitives, we first compute the bounding box for all of the primitives. Then, if the number of primitives
+			is below the max leaf size, we end the algorithm. If not, we recursively split the set of primitives in half by first taking the
+			longest axis, and then sorting the objects by their centroid along this longest axis. We then split the objects into two groups
+			based on the median centroid position. As such, we create a tree structure of bounding boxes that become tighter as the tree
+			is traversed towards the leaves. As mentioned above, we used the longest axis median centroid as our heuristic for splitting.</p>
+		<p> We now show some more complicated images with normal shading, the we had to render using the BVH acceleration. </p>
+		<h3> Max Planck with Normal Shading </h3>
+		<img src="max_planck_task2.png" width="480" height="360">
+		<h3> Lucy with Normal Shading </h3>
+		<p> Next, we compare
+		<img src="lucy_task2.png" width="480" height="360">
 		<h2> Link to Website </h2>
-		<a href="https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj2/index.html">https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj2/index.html</a> 
+		<a href="https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj3-1/index.html">https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj3-1/index.html</a> 
 	</body>
 </html>
