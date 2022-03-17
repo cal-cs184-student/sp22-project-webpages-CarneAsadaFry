@@ -2,6 +2,29 @@
 	<head>
 	</head>
 	<body>
-		Project 3-1 here
+		<h1> Project 2 </h1>
+		<h2> Overview </h2>
+		<p>  </p>
+		<h2> Part 1 </h2>
+		<p>
+			For ray generation, we first calculated the transformation from image space to camera space by looking at where the points (0, 0)
+			and (1, 1) in image space were mapped to in camera space, and deriving the appropriate affine transformation. Once we had the transform,
+			we used it on the given coordinates to find the appropritate direction of the ray, and make the ray in that direction coming from the camera
+			Then, to estimate the integral of radiance over a pixel, we use our generate ray function above
+			to create random rays within the pixel, and then we average over their estimated illumination values. As part of calculating
+			the estimated illumination, we need to calculate the intersections of our rays with primitive objeccts such as triangles and spheres.
+			We use this to tell when our rays hit various objects in the world, which allows us to create an intersection object that tracks
+			the bsdf of the object hit, as well as where the collision occurs and other information. </p>
+		<p> To implement the triangle intersection, we used the Moller Trumbore algorithm. This uses various vector operations to efficiently calculate the 
+			parameter t, the time when the ray intersects the plane of the triangle, and b1 and b2, which are two of the coefficients for the barycentric
+			coordinates of the traingle from the parameters of the ray and the vertices of the triangle. Using t, we can first check if the ray actually
+			intersects the plane, and if it does so in the range of interest, and then we can use the barycentric coordinates to check that the ray is
+			inside the triangle, since one of the coordinates will be negative if it is not. If we pass all checks, we intersected the triangle.</p>
+		<h3> Spheres with Normal Shading </h3>
+		<img src="spheres_task1.png" width="480" height="360">
+		<h3> Cow with Normal Shading </h3>
+		<img src="cow_task1.png" width="480" height="360">
+		<h2> Link to Website </h2>
+		<a href="https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj2/index.html">https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj2/index.html</a> 
 	</body>
 </html>
