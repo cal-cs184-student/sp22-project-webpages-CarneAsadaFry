@@ -4,7 +4,25 @@
 	<body>
 		<h1> Project 3 </h1>
 		<h2> Overview </h2>
-		<p>  </p>
+		<p> 
+			In Part 1, we implemented the basic ray generation for a pixel, as well as the triangle and sphere intersection tests
+			for a ray. This allowed us to render simple images with normal shading. In Part 2, we implemented the bounding volume hierarchy,
+			which sped up the computation of intersections by forming a tree structure, and allowing us to skip the computation of intersections
+			with many of the primitives in the scene for a given ray. This allowed us to render much more complex images with normal shading.
+			In Part 3, we implemented zero bounce and one direct lighting. The hemisphere technique gave very grainy images because it
+			sampled many rays that did not intersect with a light source and thus did not contribute to the lighting of the scene. The
+			importance lighting fixed this issue by only picking rays that pointed towards sources, improving the image quality greatly
+			for the same number of samples. In Part 4, we implemented multiple bounce lighting, which gave more sophisticated lighting effects.
+			To do this, we implemented a recursive algorithm which repeatedly calculated one bounce radiance and then recursed on a sampled
+			ray. We terminated the recursion randomly with Russian roulette that was also bounded by some constant depth. Finally, in Part 5,
+			we implemented adaptive sampling which uses a heuristic to determine when a pixel has sufficiently converged to its proper lighting,
+			which allows us to prematurely terminate the sampling for pixels in some cases.</p>
+		<p>
+			We encountered two main problems in our implementation, both in Part 4. First, we had a sign error in one of our ray calculations,
+			which caused the ceiling to remain dark. We were able to fix this with careful geometric reasoning, thinking about the different
+			coordinate frames and the logical directions in which the rays should be traveling. Second, we forgot to eliminate rays that had
+			a negative cosine angle, which caused the canceling out of some rays in the scene, preventing certain parts from being lit. We
+			went to office hours, and were able to get this issue resolved. </p>
 		<h2> Part 1 </h2>
 		<p>
 			For ray generation, we first calculated the transformation from image space to camera space by looking at where the points (0, 0)
@@ -38,8 +56,95 @@
 		<h3> Max Planck with Normal Shading </h3>
 		<img src="max_planck_task2.png" width="480" height="360">
 		<h3> Lucy with Normal Shading </h3>
-		<p> Next, we compare
 		<img src="lucy_task2.png" width="480" height="360">
+		<p> 
+			Next, we compare the rendering times of moderately complex geometries with and without the BVH acceleration. We rendered these images
+			locally on our laptops using 8 threads in 800x600 resolution. 
+			We first rendered the banana, which took 1.9493s without the BVH acceleration, and took
+			0.1761s with the BVH acceleration. The banana is shown below. </p>
+		<h3> Banana with Normal Shading </h3>
+		<img src="banana_task2.png" width="480" height="360">
+		<p>
+			We also rendered the cow from above, with the same parameters. The rendering took 9.1542s without the BVH acceleration, and took
+			0.5547s with the BVH acceleration. In both cases, the BVH acceleration made rendering more than 10 times faster! This is because 
+			instead of checking the intersection with every primitive in the bounding box, we perform a series of cuts to the bounding
+			box that reduces the number of primitves by roughly half at each step. Thus, we should expect a potentially exponential
+			speedup in the intersection computations. </p>
+		<h2> Part 3 </h2>
+		<p>
+			First, we implemented hemisphere sampling direct lighting. To do this, we first uniformly sample from a hemisphere around the point
+			where our incoming ray intersected with the geometry. We then generate rays from the samples and compute how much light
+			is reflected back by each from the objects they intersect with. Then, we use this information to create a Monte Carlo
+			estimator for the reflection equation. The reflection equation tells us how much light is reflected back to the camera.
+			Next, we implemented importance sampling direct lighting. To do this, we instead sample directions between the point of interest
+			and each light source, doing a fixed number of samples per source. We check if there is an object that the ray will hit
+			between the point of intereste and light source. If there is not, we add the term to our Monte Carlo estimator as in the
+			hemisphere sampling, and use the same reflection equation to give the light reflected back.</p>
+		<p> 
+			We will now show some images rendered with each direct lighting mode. Each was rendered with 32 camera rays per pixel and 
+			16 samples per area light.</p>
+		<h3> Bunny with Hemisphere Sampling </h3>
+		<img src="bunny_hemi_task3.png" width="480" height="360">
+		<h3> Bunny with Importance Sampling </h3>
+		<img src="bunny_imp_task3.png" width="480" height="360">
+		<h3> Spheres with Hemisphere Sampling </h3>
+		<img src="sphere_hemi_task3.png" width="480" height="360">
+		<h3> Spheres with Importance Sampling </h3>
+		<img src="sphere_imp_task3.png" width="480" height="360">
+		<p>
+			We notice that for the same number of light rays, the image is much less grainy when using
+			importance sampling because the rays are focused in directions
+			that actually contribute to the shading of the scene.</p>
+		<p> 
+			Now, we compare renderings of the spheres with importance sampling and 1 camera ray per pixel, and different values for the number of samples
+			per area light.</p>
+		<h3> Spheres with 1 Sample per Area Light </h3>
+		<img src="spheres_1_task3.png" width="480" height="360">
+		<h3> Spheres with 4 Sample per Area Light </h3>
+		<img src="spheres_4_task3.png" width="480" height="360">
+		<h3> Spheres with 16 Sample per Area Light </h3>
+		<img src="spheres_16_task3.png" width="480" height="360">
+		<h3> Spheres with 64 Sample per Area Light </h3>
+		<img src="spheres_64_task3.png" width="480" height="360">
+		<p>
+			We notice that as we increase the number of samples per area light, the noise in the soft shaddows decreases, and we get a
+			smoother transition between light and dark areas of the scene.</p>
+		<p>
+			Overall, we see that importance/lighting sampling gives us a much less grainy image for the same number of samples, both in terms
+			of camera rays per pixel and samples per area light. This is because the hemisphere sampling picks rays in arbitrary directions,
+			and many of these will not point to a light source. When using the light sampling, a much higher porportion of the rays calculated
+			will actually contribute to the lighting of the scene.</p>
+		<h2> Part 4 </h2>
+		<p>
+			To implement indirect lighting, we first add the contribution from zero bounces. Then, we enter a recursive function. We start
+			by adding the contribution from a single bounce, then we sample a new ray from a cosine-weighted hemisphere sampler, and
+			recurse on this ray, adding its light output from the object it intersects to our total. We terminate the recursion using Russian
+			roulette, so at each step it has a 33% chance of terminating, and we also cap it at some set limit. However, we make sure
+			that we always get one additional recursive step if the maximum is set to allow this. As before, we calculate all light 
+			contributions using the reflectance equation.</p>
+		<h2> Part 5 </h2>
+		<p> 
+			For each ray sample in a pixel, we track a proxy for the mean and variance of the illuminance, and then periodically use them to compute
+			I, which is used in a heuristic to determine if the given pixel has sufficiently converged to its proper light value. This is determined
+			by a max tolerance parameter, as well as an assumption that our samples follow a normal distribution. Once the heuristic condition
+			is met, we terminate the sampling for the pixel, possibly saving some computation time. We keep a maximum number of samples in case
+			a pixel does not converge.</p>
+		<p>
+			We now give an example of an image that has differing sampling rates. We used 1 sample per light, 2048 samples per pixel,
+			and a max ray depth of 5.</p>
+		<h3> Noise-Free Bunny </h3>
+		<img src="bunny_part5.png" width="480" height="360">
+		<h3> Bunny Sample Rate Map </h3>
+		<img src="bunny_rate.png" width="480" height="360">
+		<p>
+			Red indicates many samples, while blue indicates few. We notice that the walls and other flat parts of the image with direct
+			line of sight to the light source converge very quickly, while parts of the image with more complicated geometry, and pieces
+			that require multiple bounces to be lit, take longer to converge and thus require more samples.</p>
+		<h2> Collaboration </h2>
+		<p>
+			We completed this project using the pair programming technique, where we had a driver and a navigator. We both worked
+			on rendering images for the writeup. The collaboration went well overall, with both of us contributing to the conceptual
+			strategy, and practical implementation. We learned that in computer graphics, the most powerful algorithm is friendship.</p>
 		<h2> Link to Website </h2>
 		<a href="https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj3-1/index.html">https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj3-1/index.html</a> 
 	</body>
