@@ -99,13 +99,13 @@
 			Now, we compare renderings of the spheres with importance sampling and 1 camera ray per pixel, and different values for the number of samples
 			per area light.</p>
 		<h3> Spheres with 1 Sample per Area Light </h3>
-		<img src="spheres_1_task3.png" width="480" height="360">
+		<img src="spheres_1_part3.png" width="480" height="360">
 		<h3> Spheres with 4 Sample per Area Light </h3>
-		<img src="spheres_4_task3.png" width="480" height="360">
+		<img src="spheres_4_part3.png" width="480" height="360">
 		<h3> Spheres with 16 Sample per Area Light </h3>
-		<img src="spheres_16_task3.png" width="480" height="360">
+		<img src="spheres_16_part3.png" width="480" height="360">
 		<h3> Spheres with 64 Sample per Area Light </h3>
-		<img src="spheres_64_task3.png" width="480" height="360">
+		<img src="spheres_64_part3.png" width="480" height="360">
 		<p>
 			We notice that as we increase the number of samples per area light, the noise in the soft shaddows decreases, and we get a
 			smoother transition between light and dark areas of the scene.</p>
@@ -173,7 +173,11 @@
 		<h3> Spheres, 1024 Sample per Pixel </h3>
 		<img src="spheres1024.png" width="480" height="360">
 		<p>
-			At low sample rates, we notice that the image is uniformly noisy, 
+			At low sample rates, we notice that the image is uniformly noisy, since we only sample one location within each pixel. Thus,
+			there is a chance that we sample a very bright point within the pixel, and then the entire pixel looks white. As we increase
+			the number of samples per pixel, we get a smoother image because we sample multiple points within each pixel and so get 
+			a more accurate approximation of the light hitting the pixel. We notice that unlike the number of samples per area light,
+			the noise by having a low sample rate per pixel is uniform across the entire image and not concentrated near shadows.</p>
 		<h2> Part 5 </h2>
 		<p> 
 			For each ray sample in a pixel, we track a proxy for the mean and variance of the illuminance, and then periodically use them to compute
