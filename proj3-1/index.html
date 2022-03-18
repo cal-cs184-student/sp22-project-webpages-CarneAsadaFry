@@ -122,6 +122,58 @@
 			roulette, so at each step it has a 33% chance of terminating, and we also cap it at some set limit. However, we make sure
 			that we always get one additional recursive step if the maximum is set to allow this. As before, we calculate all light 
 			contributions using the reflectance equation.</p>
+		<p>
+			We now show some images with 1024 samples per pixel and indirect lighting with 2 maximum bounces.</p>
+		<h3> Wall-E </h3>
+		<img src="wall-e_task4.png" width="480" height="360">
+		<h3> Dragon </h3>
+		<img src="dragon_task4.png" width="480" height="360">
+		<h3> Blob </h3>
+		<img src="blob_task4.png" width="480" height="360">
+		<p> We will now compare the sphere scene at 1024 samples per pixel first with only direct lighting, and then with only indirect lighting 
+			up to 5 bounces.</p>
+		<h3> Spheres, Direct Lighting Only </h3>
+		<img src="spheres_direct_task4.png" width="480" height="360">
+		<h3> Spheres, Indirect Lighting Only </h3>
+		<img src="spheres_indirect_task4.png" width="480" height="360">
+		<p> In the direct lighting image, we see that only parts of the scene which are light sources or have a direct line of sight to a light
+			source are illuminated. In the indirect lighting scene, we see that the brightest parts of the scene are those which have one
+			bounce paths to the light source, and in general the lit parts are those which have multiple bounce paths to the light source.</p>
+		<p> Next, we compare the bunny at a max ray depth of 0, 1, 2, 3, and 100 with 1024 samples per pixel.</p>
+		<h3> Bunny, Max Depth 0 </h3>
+		<img src="bunny0.png" width="480" height="360">
+		<h3> Bunny, Max Depth 1 </h3>
+		<img src="bunny1.png" width="480" height="360">
+		<h3> Bunny, Max Depth 2 </h3>
+		<img src="bunny2.png" width="480" height="360">
+		<h3> Bunny, Max Depth 3 </h3>
+		<img src="bunny3.png" width="480" height="360">
+		<h3> Bunny, Max Depth 100 </h3>
+		<img src="bunny100.png" width="480" height="360">
+		<p>
+			When using ray depth 0, only the light source is illuminated. At depth 1, only the parts of the scene with a direct path
+			to the light source are illuminated. At depth 2 and above, the lighting looks more natural. As we increase the ray depth,
+			the scene becomes more evenly lit because the harder to reach corners of the scene start to get more illumination as we
+			add longer and longer sequences of bounces. The image also appears slightly more "washed out" at very large depths like 100,
+			since each point of the scene will have more rays actually contributing to the illumination. </p>
+		<p>
+			We now show the spheres with 4 samples per area light, and 1, 2, 4, 8, 16, 64, and 1024 samples per pixel. </p>
+		<h3> Spheres, 1 Sample per Pixel </h3>
+		<img src="spheres1.png" width="480" height="360">
+		<h3> Spheres, 2 Sample per Pixel </h3>
+		<img src="spheres2.png" width="480" height="360">
+		<h3> Spheres, 4 Sample per Pixel </h3>
+		<img src="spheres4.png" width="480" height="360">
+		<h3> Spheres, 8 Sample per Pixel </h3>
+		<img src="spheres8.png" width="480" height="360">
+		<h3> Spheres, 16 Sample per Pixel </h3>
+		<img src="spheres16.png" width="480" height="360">
+		<h3> Spheres, 64 Sample per Pixel </h3>
+		<img src="spheres64.png" width="480" height="360">
+		<h3> Spheres, 1024 Sample per Pixel </h3>
+		<img src="spheres1024.png" width="480" height="360">
+		<p>
+			At low sample rates, we notice that the image is uniformly noisy, 
 		<h2> Part 5 </h2>
 		<p> 
 			For each ray sample in a pixel, we track a proxy for the mean and variance of the illuminance, and then periodically use them to compute
