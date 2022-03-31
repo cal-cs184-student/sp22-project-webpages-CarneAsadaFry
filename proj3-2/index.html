@@ -55,5 +55,54 @@
 			the sphere, one to enter, and a third to leave.  At 4 bounces, we can now correctly see the glass sphere in the 
 			reflection of the mirror sphere, since we get three bounces before the reflection. Going to 5 bounces and then 100,
 			the scene simply becomes more evenly lit, with no dramatic additional effects that appear. </p>
+		<h2> Part 2 </h2>
+		<p>
+			We started by implementing the microfacet BRDF evaluation function f in terms of the Fresnel term, the shadow-masking term, and
+			the normal distribution function. We had to calculate the half-vector h, which we did using wo and wi with the formula from
+			lecture. Next, we implemented the normal distribution function using the Beckmann distribution. For this, we needed theta_h,
+			which we got by first finding cos(theta_h) and taking the arccos. After that, we implemented the Fresnel term. To do this,
+			we calculated Rs and Rp terms for R, G, and B using fixed wavelengths, and then using the corresponding indices of refraction
+			eta and k. We then used Rs and Rp to find F. Finally, we implemented importance sampling for sampling from the Beckmann
+			distribution. To do this, we first used the inversion method to randomly sample angles theta and phi. Then, we converted these into
+			angles to a point on the unit sphere to get a half vector h. Next, we go our wi by reflecting wo across h. Then,
+			we used the distributions for the angle to find the pdf for wi. Finally, we made sure wi was valid by checking if the z component
+			was greater than zero, and then we returned f(wi,wo) after updating wi and the pdf. </p>
+		<p>
+			Now, we show the gold dragon image with four different values for the alpha parameter. The dragon was rendered with 128 samples
+			per pixel, 1 sample per light, and a maximum of 5 bounces. </p>
+		<h3> Golden Dragon, Alpha 0.005 </h3>
+		<img src="dragon0005.png" width="480" height="360">
+		<h3> Golden Dragon, Alpha 0.05 </h3>
+		<img src="dragon005.png" width="480" height="360">
+		<h3> Golden Dragon, Alpha 0.25 </h3>
+		<img src="dragon025.png" width="480" height="360">
+		<h3> Golden Dragon, Alpha 0.5 </h3>
+		<img src="dragon05.png" width="480" height="360">
+		<p>
+			We see that as alpha increases, the dragon becomes less shiny and more diffuse. It also appears brighter at larger alpha values.
+			Additionally, we notice that the image becomes more noisy, with random white spots,
+			at smaller alpha values. The noise at small alpha values happens
+			because the pdf becomes very small at some points when we use a small alpha.
+			This causes the radiance to spike, leading to white spots at various points. </p>
+		<p>
+			Next, we compare the copper bunny with hemisphere sampling versus with importance sampling. We use 64 samples per pixel, 1 
+			sample per light, and a maximum ray depth of 5. </p>
+		<h3> Copper Bunny, Hemisphere Sampling </h3>
+		<img src="bunny_hemisphere.png" width="480" height="360">
+		<h3> Copper Bunny, Importance Sampling </h3>
+		<img src="bunny_importance.png" width="480" height="360">
+		<p>
+			We notice that the bunny with hemisphere sampling is very noisy with many dark spots. This is because we are using relatively
+			few samples, and we are picking our samples uniformly, and so we end up picking samples with no reflective light. In the importance
+			sampling bunny, we no longer have the many dark spots because we are much more likely to sample rays that are relevant to the
+			reflectance. </p>
+		<p>
+			Finally, we give a dragon which has been given the optical constants of cobalt. The eta values were (2.1841, 2.05, 1.7925) for RGB
+			and the k values were (4.0971, 3.82, 3.3775) for RGB. To find these values, we used 
+			<a href="https://refractiveindex.info"> https://refractiveindex.info </a>.
+			We also used an alpha value of 0.25. We rendered with 128 samples
+			per pixel, 1 sample per light, and a maximum of 5 bounces. </p>
+		<h3> Cobalt Dragon </h3>
+		<img src="dragoncobalt.png" width="480" height="360">
 	</body>
 </html>
