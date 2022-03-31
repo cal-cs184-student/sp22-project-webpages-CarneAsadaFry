@@ -2,6 +2,58 @@
 	<head>
 	</head>
 	<body>
-		Project 3-2 here
+		<h1> Project 3-2 </h1>
+		<h2> Overview </h2>
+		<h2> Part 1 </h2>
+		<p>
+			We started by implementing the reflect helper function, which simply takes in a ray in object coordinates and 
+			outputs its reflection about the normal vector. Since this is just along the z-axis, we simply flip the x and y coordinates.
+			Next, we implemented sample_f for the mirror material. This is a delta BSDF that simply reflects all the rays,
+			so we just update wi using the reflect function, set the pdf to 1, and return the reflectance with an additional factor
+			that cancels out the cosine factor introduced in at_least_one_bounce_radiance. Next, we implemented the refract helper
+			function. We used the z coordinate of wo to check if we were entering or exiting the material to correctly calculated
+			the ratio of indices of refraction, eta. Then, we checked for total internal reflection. If we do not have this,
+			we used Snell's law and some geometry to derive the expression for wi. Then, we implemented sample_f for RefractionBSDFs.
+			We used refract to check for total internal reflection, and if this did not happen, to calculate wi. Then, we again take
+			the pdf to be 1 and we return the transmittance normalized by eta^2, and a factor that cancels with the cosine term
+			in at_least_one_bounce_radiance. The normalization by eta^2 captures the physical properties of the radiance. Finally,
+			we implemented glass materials. If there is total internal reflection, we only include reflection effects. Otherwise, we
+			compute Schlick's reflection coefficent, R, and then randomly decide to either reflect or refract, where the choice is weighted
+			by R. We then sample as before, but the pdfs and returned radiance are weighted by the probability of picking the case. </p>
+		<p>
+			We first show CBspheres_refract.dae rendered with 512 samples per pixel, 4 samples per light, and max ray depth 100. </p>
+		<h3> Refractive Sphere </h3>
+		<img src="spheresrefract0.png" width="480" height="360">
+		<p>
+			We notice that the sphere in the front does not reflect the top light source because it is a RefractionBSDF in this file,
+			and thus does not reflect any light. The sphere in the back is a MirrorBSDF, so it only reflects, and we can see the top light source. </p>
+		<p>
+			We now show CBspheres.dae rendered with 512 samples per pixel, 4 samples per light, and with max ray depths of 0, 1, 2, 3, 4, 5, and 100. </p>
+		<h3> Spheres, Max Depth 0 </h3>
+		<img src="spheres0.png" width="480" height="360">
+		<h3> Spheres, Max Depth 1 </h3>
+		<img src="spheres1.png" width="480" height="360">
+		<h3> Spheres, Max Depth 2 </h3>
+		<img src="spheres2.png" width="480" height="360">
+		<h3> Spheres, Max Depth 3 </h3>
+		<img src="spheres3.png" width="480" height="360">
+		<h3> Spheres, Max Depth 4 </h3>
+		<img src="spheres4.png" width="480" height="360">
+		<h3> Spheres, Max Depth 5 </h3>
+		<img src="spheres5.png" width="480" height="360">
+		<h3> Spheres, Max Depth 100 </h3>
+		<img src="spheres100.png" width="480" height="360">
+		<p>
+			With 0 bounces, we only have the direct light source. With 1 bounce, we can now see the parts of the scene that are directly
+			lit by the light source, but we cannot yet see the glass or mirror materials. With 2 bounces, we can now see the mirror sphere,
+			because the rays that bounce once and then reflect off the sphere. However, in our reflection, only parts of the scene
+			which are directly lit appear lit, since we only have one bounce before the reflection.
+			We also get the reflective component of the glass material, but we do not get refraction yet. 
+			We also overall get more even lighting in the scene. At 3 bounces, we now get refraction in the glass sphere and
+			a more evenly lit reflection in mirror sphere, but we still cannot see the glass sphere in the mirror sphere since
+			we only have two bounces before reflection. We need at least 3 bounces to see refraction because we need a bounce to reach
+			the sphere, one to enter, and a third to leave.  At 4 bounces, we can now correctly see the glass sphere in the 
+			reflection of the mirror sphere, since we get three bounces before the reflection. Going to 5 bounces and then 100,
+			the scene simply becomes more evenly lit, with no dramatic additional effects that appear. </p>
 	</body>
 </html>
