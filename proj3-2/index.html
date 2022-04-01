@@ -4,6 +4,21 @@
 	<body>
 		<h1> Project 3-2 </h1>
 		<h2> Overview </h2>
+		<p>
+			We completed Parts 1 and 2 of the project. In this project, we implemented more complicated materials like glass, mirrors,
+			and microfacet materials in our ray tracer. In Part 1, implementing mirrors and refracting materials. To do this,
+			we had to calculate the paths for reflecting and refracting rays, the latter of which involved considering the material's
+			index of refraction. We then used these functions to build the sample_f functions for mirrors and refracting materials,
+			where we returned the radiance at a point and provided an incoming ray, as well as a pdf. Then, we combined these two
+			material types using Schlick's approximation to create a glass material which has both reflective and refractive characteristics.
+			In Part 2, we implemented microfacet materials. We first created the evaluation function, which consisted of several terms
+			that had to be implemented which relied on the geometry of the collision and the physical properties of the material. After
+			creating the evaluation function, we implemented importance sampling for the Beckmann distribution, which made our sampling
+			much more likely to select rays that contribute to the radiance of the object, which means we get a much clearer image
+			with less computation. Luckily, we did not run into any major difficulties with this project. The largest difficulty
+			we had was confusing ourselves over floating point arithmetic, where we thought that we had a rounding error that
+			turned out to not be a problem. From this, we better learned to reason carefully about which data types are appropriate
+			in which situation. Besides that, our implementation went relatively smoothly. </p>
 		<h2> Part 1 </h2>
 		<p>
 			We started by implementing the reflect helper function, which simply takes in a ray in object coordinates and 
@@ -97,12 +112,24 @@
 			sampling bunny, we no longer have the many dark spots because we are much more likely to sample rays that are relevant to the
 			reflectance. </p>
 		<p>
-			Finally, we give a dragon which has been given the optical constants of cobalt. The eta values were (2.1841, 2.05, 1.7925) for RGB
+			Finally, we show a dragon which has been given the optical constants of cobalt. The eta values were (2.1841, 2.05, 1.7925) for RGB
 			and the k values were (4.0971, 3.82, 3.3775) for RGB. To find these values, we used 
 			<a href="https://refractiveindex.info"> https://refractiveindex.info </a>.
 			We also used an alpha value of 0.25. We rendered with 128 samples
 			per pixel, 1 sample per light, and a maximum of 5 bounces. </p>
 		<h3> Cobalt Dragon </h3>
 		<img src="dragoncobalt.png" width="480" height="360">
+		<h2> Collaboration </h2>
+		<p>
+			We again completed this project using the pair programming technique, where we had a driver and a navigator.
+			However, we switched rolls since last time.
+			The collaboration went well overall, with both of us contributing to the conceptual
+			strategy, and practical implementation.
+			Overall, in this project we learned how to implement more complicated materials in a ray tracer using a combination
+			of geometry and the physical properties of materials, and we learned which different physical properties are relevant
+			and how they affect the look of a material.
+			But, again, our biggest lesson was that in computer graphics, the most powerful algorithm is friendship.</p>
+		<h2> Link to Website </h2>
+		<a href="https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj3-2/index.html">https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj3-2/index.html</a> 
 	</body>
 </html>
