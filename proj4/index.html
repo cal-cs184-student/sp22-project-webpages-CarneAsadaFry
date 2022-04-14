@@ -5,16 +5,35 @@
 		<h1> Project 4 </h1>
 		<h2> Overview </h2>
 		<p>
-			Overview here. </p>
+			In this project, we implemented a spring-mass-based cloth simulation, calculated various types of collisions, 
+			and then wrote GLSL shader programs to render the cloth with different lighting and textures. We started by implementing the 
+			mass-spring mesh. To do this, we first placed all of the masses in a grid. We lay them flat for a horizontal cloth, and lay them
+			with some random displacement for vertical cloth so that the cloth will fall naturally later. We then added springs connecting
+			nearby springs. We had springs for structural, shearing, and bending constraints, each of which connect different springs
+			and provide different things for making the cloth act in a physically realistic way. Next, we used basic physics to compute
+			the net force on each mass from both the springs and external forces. This allowed us to find the acceleration and then
+			use Verlet integration to discretize the kinematic equations and compute the motion of the masses. Finally, we implemented
+			a constraint from Provot 1995 that prevents the springs from stretching too much, which helps prevent the Verlet integration
+			from diverging. After that, we handled collisions with spheres and planes by checking whether the cloth has passed through
+			a plane or sphere object, and if it has, applying a correction to its position so the cloth sits on top of the sphere, or
+			just above the plane. We also scale our correction vectors using a friction contribution. After that, we considered self
+			collisions. To speed up computation, we split space into many boxes, and then assign a float to each point mass depending
+			on which box it sits in. Then, by looking up the float in a hash map, we only check for collisions between a point and the
+			others in the same box. We assign a thickness parameter to the cloth, and if two points are closer than the thickness allows,
+			we repel them. Finally, we implemented many GLSL shaders. We first created a diffuse shader, and then the Blinn-Phong shading
+			model, which has an ambient, diffuse, and specular term. We also implemented texture mapping which allows us to put an image
+			on the cloth, and then displacement and bumping mapping. The former allows us to give the cloth a 3d texture, while the
+			latter allows us to give an illusion of 3d texture on the cloth. Finally, we implemented environment-mapped reflections, 
+			which allows us to use an environment map image to make the cloth look like it is reflecting its surroundings. </p>
 		<h2> Part 1 </h2>
 		<p>
 			We first show the cloth wireframe with different constraints. </p>
 		<h3> Wireframe, No Shear </h3>
-		<img src="no_shear.png" width="480" height="auto">
+		<img src="no_shear.png" width="640" height="auto">
 		<h3> Wireframe, Only Shear </h3>
-		<img src="only_shear.png" width="480" height="auto">
+		<img src="only_shear.png" width="640" height="auto">
 		<h3> Wireframe, All Constraints </h3>
-		<img src="all_constraints.png" width="480" height="auto">
+		<img src="all_constraints.png" width="640" height="auto">
 		<p>
 			Comparing the different images, we see that the shearing constraints connect different masses diagonally, while the 
 			structural and bending constraints connect masses in a line. </p>
@@ -23,17 +42,17 @@
 		<p>
 			We first show the cloth pinned at 2 points, with different parameters changed. </p>
 		<h3> 2 Point Pinned Cloth, k = 10 N/m </h3>
-		<img src="k_10.png" width="480" height="auto">
+		<img src="k_10.png" width="640" height="auto">
 		<h3> 2 Point Pinned Cloth, k = 100000 N/m </h3>
-		<img src="k_100000.png" width="480" height="auto">
+		<img src="k_100000.png" width="640" height="auto">
 		<h3> 2 Point Pinned Cloth, 1 g/cm^2 </h3>
-		<img src="dens_1.png" width="480" height="auto">
+		<img src="dens_1.png" width="640" height="auto">
 		<h3> 2 Point Pinned Cloth, 10000 g/cm^2 </h3>
-		<img src="dens_10000.png" width="480" height="auto">
+		<img src="dens_10000.png" width="640" height="auto">
 		<h3> 2 Point Pinned Cloth, 0% Damping </h3>
-		<img src="damp_0.png" width="480" height="auto">
+		<img src="damp_0.png" width="640" height="auto">
 		<h3> 2 Point Pinned Cloth, 100% Damping </h3>
-		<img src="damp_100.png" width="480" height="auto">
+		<img src="damp_100.png" width="640" height="auto">
 		<p>
 			First, we notice that as we change k, the cloth falls at the same speed, but it hangs lower around the 2 pinned points and becomes
 			more wrinkled when the spring constant is lower, since the springs stretch more easily. When the spring constant it very high,
@@ -46,57 +65,57 @@
 		<p>
 			Finally, we include an image of the cloth pinned at 4 points. We used the default parameters. </p>
 		<h3> 4 Point Pinned Cloth </h3>
-		<img src="4_pinned.png" width="480" height="auto">
+		<img src="4_pinned.png" width="640" height="auto">
 		
 		<h2> Part 3 </h2>
 		<p>
 			We first show the cloth draped over a sphere with 3 different k values. </p>
 		<h3> Cloth over Sphere, k = 500 N/m </h3>
-		<img src="sphere_500.png" width="480" height="auto">
+		<img src="sphere_500.png" width="640" height="auto">
 		<h3> Cloth over Sphere, k = 5000 N/m </h3>
-		<img src="sphere_5000.png" width="480" height="auto">
+		<img src="sphere_5000.png" width="640" height="auto">
 		<h3> Cloth over Sphere, k = 50000 N/m </h3>
-		<img src="sphere_50000.png" width="480" height="auto">
+		<img src="sphere_50000.png" width="640" height="auto">
 		<p> 
 			At a low k value, the cloth hangs lower and fits much more tightly around the shape of the sphere. As the k value gets
 			higher, the cloth does not hang as low and becomes stiffer, sticking out more instead of bending around the sphere. </p>
 		<p>
 			Next, we show the cloth lying peacefully on the plane (although it does vibrate a bit). </p>
 		<h3> Cloth on Plane </h3>
-		<img src="plane.png" width="480" height="360">
+		<img src="plane.png" width="640" height="360">
 		
 		<h2> Part 4 </h2>
 		<p>
 			We start by showing the falling, self-colliding cloth at 3 different points in time. </p>
 		<h3> Falling Cloth, Start </h3>
-		<img src="fall_1.png" width="480" height="auto">
+		<img src="fall_1.png" width="640" height="auto">
 		<h3> Falling Cloth, Middle </h3>
-		<img src="fall_2.png" width="480" height="auto">
+		<img src="fall_2.png" width="640" height="auto">
 		<h3> Falling Cloth, End </h3>
-		<img src="fall_3.png" width="480" height="auto">
+		<img src="fall_3.png" width="640" height="auto">
 		<p>
 			Now, we show the fall again, first with a fixed density of 15 g/cm^2 and varying k, and then with a fixed k of 5000 N/m and a
 			varying density. </p>
 		<h3> Falling Cloth, k = 500 N/m, Start </h3>
-		<img src="fall_500_1.png" width="480" height="auto">
+		<img src="fall_500_1.png" width="640" height="auto">
 		<h3> Falling Cloth, k = 500 N/m, Middle </h3>
-		<img src="fall_500_2.png" width="480" height="auto">
+		<img src="fall_500_2.png" width="640" height="auto">
 		<h3> Falling Cloth, k = 500 N/m, End </h3>
-		<img src="fall_500_3.png" width="480" height="auto">
+		<img src="fall_500_3.png" width="640" height="auto">
 		<h3> Falling Cloth, k = 50000 N/m, Start </h3>
-		<img src="fall_50000_1.png" width="480" height="auto">
+		<img src="fall_50000_1.png" width="640" height="auto">
 		<h3> Falling Cloth, k = 50000 N/m, Middle </h3>
-		<img src="fall_50000_2.png" width="480" height="auto">
+		<img src="fall_50000_2.png" width="640" height="auto">
 		<h3> Falling Cloth, k = 50000 N/m, End </h3>
-		<img src="fall_50000_3.png" width="480" height="auto">
+		<img src="fall_50000_3.png" width="640" height="auto">
 		<h3> Falling Cloth, 1 g/cm^2, Start </h3>
-		<img src="fall_1_1.png" width="480" height="auto">
+		<img src="fall_1_1.png" width="640" height="auto">
 		<h3> Falling Cloth, 1 g/cm^2, End </h3>
-		<img src="fall_1_2.png" width="480" height="auto">
+		<img src="fall_1_2.png" width="640" height="auto">
 		<h3> Falling Cloth, 100 g/cm^2, Start </h3>
-		<img src="fall_100_1.png" width="480" height="auto">
+		<img src="fall_100_1.png" width="640" height="auto">
 		<h3> Falling Cloth, 100 g/cm^2, End </h3>
-		<img src="fall_100_2.png" width="480" height="auto">
+		<img src="fall_100_2.png" width="640" height="auto">
 		<p>
 			We notice that when the spring constant is lower, the cloth makes more folds as it falls, and it is more folded in its 
 			final resting position. As we raise k, there are less folds as the cloth falls and it is more unrolled in it final resting
@@ -125,47 +144,63 @@
 			Now, we show the cloth with each component of the Blinn-Phong model separately, and then the entire model together.
 			We use k_a = 0.1, I_a = (1, 1, 1), k_d = 1, k_s = 0.5, and p = 64. </p>
 		<h3> Blinn-Phong Shading, Ambient Only </h3>
-		<img src="phong_ambient.png" width="480" height="auto">
+		<img src="phong_ambient.png" width="640" height="auto">
 		<h3> Blinn-Phong Shading, Diffuse Only </h3>
-		<img src="phong_diffuse.png" width="480" height="auto">
+		<img src="phong_diffuse.png" width="640" height="auto">
 		<h3> Blinn-Phong Shading, Specular Only </h3>
-		<img src="phong_specular.png" width="480" height="auto">
+		<img src="phong_specular.png" width="640" height="auto">
 		<h3> Blinn-Phong Shading, All Effects </h3>
-		<img src="phong_all.png" width="480" height="auto">
+		<img src="phong_all.png" width="640" height="auto">
 		<p>
 			We see that each component indeed gives the effect described. When we combine them all, we get pretty realistic looking shading! </p>
 		<p> Now, we show the cloth with the texture of the California state flag. </p>
 		<h3> California State Flag </h3>
-		<img src="texture.png" width="480" height="auto">
+		<img src="texture.png" width="640" height="auto">
 		<p>
 			Next, we give an example of a bump map. We use the included tablecloth image as the texture, because we choose where to put bumps
 			based on where the image is the most red. So, we get a nice square pattern on the sphere and the cloth. We use a height of 2
 			and a normal of 2. </p>
 		<h3> Bump Mapping, Sphere </h3>
-		<img src="bump_sphere.png" width="480" height="auto">
+		<img src="bump_sphere.png" width="640" height="auto">
 		<h3> Bump Mapping, Cloth </h3>
-		<img src="bump_cloth.png" width="480" height="auto">
+		<img src="bump_cloth.png" width="640" height="auto">
 		<p> 
 			Now, we show the same texture with displacement mapping. We now use a height of 200 and a normal of 0.02. </p>
 		<h3> Displacement Mapping, Sphere </h3>
-		<img src="displacement_sphere.png" width="480" height="auto">
+		<img src="displacement_sphere.png" width="640" height="auto">
 		<h3> Displacement Mapping, Cloth </h3>
-		<img src="displacement_cloth.png" width="480" height="auto">
+		<img src="displacement_cloth.png" width="640" height="auto">
 		<p>
 			In bump mapping, we simply modify the normals of points according to the texture so that the light is reflected off of them differently,
 			and we get appearance of a texture on the image. In displacement mapping, we change the actual positions of points on the cloth as well,
 			and so we get a more three dimensional looking texture in the final rendering. Comparing the two mapping types, we see that although
 			the images look very similar, the displacement mapping image looks less flat. </p>
 		<p>
-			FILL IN COMPARISON AT DIFFERENT COARSENESS. </p>
+			Next, we compare how the two types of shaders look on the sphere with different levels of mesh coarseness. In both coarseness
+			levels, we use a height of 2 and a normal of 1 for bump mapping, and a height of 100 and normal of 0.02 for displacement mapping. </p>
+		<h3> Bump Mapping, -o 16 -a 16 </h3>
+		<img src="bump_16.png" width="640" height="auto">
+		<h3> Bump Mapping, -o 128 -a 128 </h3>
+		<img src="bump_128.png" width="640" height="auto">
+		<h3> Displacement Mapping, -o 16 -a 16 </h3>
+		<img src="displacement_16.png" width="640" height="auto">
+		<h3> Displacement Mapping, -o 128 -a 128 </h3>
+		<img src="displacement_128.png" width="640" height="auto">
+		<p>
+			Comparing the images, we see that the bump mapping and displacement mapping are essentially impossible to distinguish with -o 16 -a 16. 
+			However, at -o 128 -a 128, we notice that the displacement mapping has a more three dimensional look at the edges of the visible part
+			of the sphere. Comparing the bump mapping between the two courseness levels, we notice that the edges of the squares in the texture
+			appear more straight with -o 128 -a 128 because the mesh is more fine and so the texture looks better. At -o 16 -a 16, the edges
+			of the squares are crooked because the sphere is less smooth. We see the same sort of effects comparing the displacement mapping between
+			the two coarseness levels. </p>
 		<p>
 			Finally, we show the mirror shader on both the sphere and the cloth. </p>
 		<h3> Mirror Shader, Sphere </h3>
-		<img src="mirror_sphere.png" width="480" height="auto">
+		<img src="mirror_sphere.png" width="640" height="auto">
 		<h3> Mirror Shader, Cloth </h3>
-		<img src="mirror_cloth.png" width="480" height="auto">
+		<img src="mirror_cloth.png" width="640" height="auto">
 		
 		<h2> Link to Website </h2>
-		<a href="https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj3-2/index.html">https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj3-2/index.html</a> 
+		<a href="https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj4/index.html">https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj4/index.html</a> 
 	</body>
 </html>
