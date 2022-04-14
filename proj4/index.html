@@ -25,6 +25,11 @@
 			on the cloth, and then displacement and bumping mapping. The former allows us to give the cloth a 3d texture, while the
 			latter allows us to give an illusion of 3d texture on the cloth. Finally, we implemented environment-mapped reflections, 
 			which allows us to use an environment map image to make the cloth look like it is reflecting its surroundings. </p>
+		<p>
+			The main issue we encountered in this project was from updating the last position of point masses in too many places, which
+			led to the cloth behaving sporadically (jumping on the sphere, bouncing excessively on the plane, etc). We were able to solve
+			the issue by carefully reasoning about the simulation pipeline and the effects of the kinematic equations and each constraint. 
+			Eventually, we realized the extra updates were not needed and the problem was fixed. </p>
 		<h2> Part 1 </h2>
 		<p>
 			We first show the cloth wireframe with different constraints. </p>
@@ -199,6 +204,9 @@
 		<img src="mirror_sphere.png" width="640" height="auto">
 		<h3> Mirror Shader, Cloth </h3>
 		<img src="mirror_cloth.png" width="640" height="auto">
+		
+		<h2> Collaboration </h2>
+		As in previous projects, we use the pair programming technique and the power of friendship to become elite warriors of computer graphics.
 		
 		<h2> Link to Website </h2>
 		<a href="https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj4/index.html">https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj4/index.html</a> 
