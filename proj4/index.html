@@ -4,8 +4,8 @@
 	<body>
 		<h1> Project 4 </h1>
 		<h2> Overview </h2>
-		
-		
+		<p>
+			Overview here. </p>
 		<h2> Part 1 </h2>
 		<p>
 			We first show the cloth wireframe with different constraints. </p>
@@ -47,3 +47,125 @@
 			Finally, we include an image of the cloth pinned at 4 points. We used the default parameters. </p>
 		<h3> 4 Point Pinned Cloth </h3>
 		<img src="4_pinned.png" width="480" height="360">
+		
+		<h2> Part 3 </h2>
+		<p>
+			We first show the cloth draped over a sphere with 3 different k values. </p>
+		<h3> Cloth over Sphere, k = 500 N/m </h3>
+		<img src="sphere_500.png" width="480" height="360">
+		<h3> Cloth over Sphere, k = 5000 N/m </h3>
+		<img src="sphere_5000.png" width="480" height="360">
+		<h3> Cloth over Sphere, k = 50000 N/m </h3>
+		<img src="sphere_50000.png" width="480" height="360">
+		<p> 
+			At a low k value, the cloth hangs lower and fits much more tightly around the shape of the sphere. As the k value gets
+			higher, the cloth does not hang as low and becomes stiffer, sticking out more instead of bending around the sphere. </p>
+		<p>
+			Next, we show the cloth lying peacefully on the plane (although it does vibrate a bit). </p>
+		<h3> Cloth on Plane </h3>
+		<img src="plane.png" width="480" height="360">
+		
+		<h2> Part 4 </h2>
+		<p>
+			We start by showing the falling, self-colliding cloth at 3 different points in time. </p>
+		<h3> Falling Cloth, Start </h3>
+		<img src="fall_1.png" width="480" height="360">
+		<h3> Falling Cloth, Middle </h3>
+		<img src="fall_2.png" width="480" height="360">
+		<h3> Falling Cloth, End </h3>
+		<img src="fall_3.png" width="480" height="360">
+		<p>
+			Now, we show the fall again, first with a fixed density of 15 g/cm^2 and varying k, and then with a fixed k of 5000 N/m and a
+			varying density. </p>
+		<h3> Falling Cloth, k = 500 N/m, Start </h3>
+		<img src="fall_500_1.png" width="480" height="360">
+		<h3> Falling Cloth, k = 500 N/m, Middle </h3>
+		<img src="fall_500_2.png" width="480" height="360">
+		<h3> Falling Cloth, k = 500 N/m, End </h3>
+		<img src="fall_500_3.png" width="480" height="360">
+		<h3> Falling Cloth, k = 50000 N/m, Start </h3>
+		<img src="fall_50000_1.png" width="480" height="360">
+		<h3> Falling Cloth, k = 50000 N/m, Middle </h3>
+		<img src="fall_50000_2.png" width="480" height="360">
+		<h3> Falling Cloth, k = 50000 N/m, End </h3>
+		<img src="fall_50000_3.png" width="480" height="360">
+		<h3> Falling Cloth, 1 g/cm^2, Start </h3>
+		<img src="fall_1_1.png" width="480" height="360">
+		<h3> Falling Cloth, 1 g/cm^2, End </h3>
+		<img src="fall_1_2.png" width="480" height="360">
+		<h3> Falling Cloth, 100 g/cm^2, Start </h3>
+		<img src="fall_100_1.png" width="480" height="360">
+		<h3> Falling Cloth, 100 g/cm^2, End </h3>
+		<img src="fall_100_2.png" width="480" height="360">
+		<p>
+			We notice that when the spring constant is lower, the cloth makes more folds as it falls, and it is more folded in its 
+			final resting position. As we raise k, there are less folds as the cloth falls and it is more unrolled in it final resting
+			position. When we lower the density, we get the opposite effect. The cloth makes fewer folds as it falls, and is more unrolled
+			in its final resting position. At higher density, the cloth folds more as it falls and ends up more folded in its resting position. </p>
+		
+		<h2> Part 5 </h2>
+		<p>
+			A shader program is a program that runs on the GPU seperately from the main cloth renderer at the same time. Given some input,
+			the shader outputs a single 4D vector. This can represent color (r,g,b,a) at a certain point in the image, for instance. The vertex
+			shader is in charge of transforming vertices' properties, such as their position and normal vectors. It both calculates the final
+			position of a given vertex, and produces variables (varyings) that the fragment shader will use. The rasterization occurs,
+			and then the fragment shader computes a color using the varyings created by the vertex shader. Together, by computing
+			geometric quantities with the vertex shader and then using these to compute a color in the fragment shader, we can
+			create lighting and material effects. </p>
+		<p>
+			The Blinn-Phong shading model works by combining three different lighting effects. It includes an ambient term which captures
+			even shading that does not depend on any light source. This produces an even hue.
+			Next, it includes a diffuse term, which is shading that is independent of view direction,
+			but it it does depend on a light source. This term gives a matte appearance. Finally, it includes a specular term, which
+			does depend on view direction. It uses the half-vector to compute when we are near the mirror direction, and then we can
+			produce a glare. This is possible because the half-vector is closer to the normal when we are closer to the mirror direction.
+			In the Blinn-Phong model, we can control the relative contributions of these three terms, and change a p value which controls
+			how sharp the reflection in the specular term is. </p>
+		<p>
+			Now, we show the cloth with each component of the Blinn-Phong model separately, and then the entire model together.
+			We use k_a = 0.1, I_a = (1, 1, 1), k_d = 1, k_s = 0.5, and p = 64. </p>
+		<h3> Blinn-Phong Shading, Ambient Only </h3>
+		<img src="phong_ambient.png" width="480" height="360">
+		<h3> Blinn-Phong Shading, Diffuse Only </h3>
+		<img src="phong_diffuse.png" width="480" height="360">
+		<h3> Blinn-Phong Shading, Specular Only </h3>
+		<img src="phong_specular.png" width="480" height="360">
+		<h3> Blinn-Phong Shading, All Effects </h3>
+		<img src="phong_all.png" width="480" height="360">
+		<p>
+			We see that each component indeed gives the effect described. When we combine them all, we get pretty realistic looking shading! </p>
+		<p> Now, we show the cloth with the texture of the California state flag. </p>
+		<h3> California State Flag </h3>
+		<img src="texture.png" width="480" height="360">
+		<p>
+			Next, we give an example of a bump map. We use the included tablecloth image as the texture, because we choose where to put bumps
+			based on where the image is the most red. So, we get a nice square pattern on the sphere and the cloth. We use a height of 2
+			and a normal of 2. </p>
+		<h3> Bump Mapping, Sphere </h3>
+		<img src="bump_sphere.png" width="480" height="360">
+		<h3> Bump Mapping, Cloth </h3>
+		<img src="bump_cloth.png" width="480" height="360">
+		<p> 
+			Now, we show the same texture with displacement mapping. We now use a height of 200 and a normal of 0.02. </p>
+		<h3> Displacement Mapping, Sphere </h3>
+		<img src="displacement_sphere.png" width="480" height="360">
+		<h3> Displacement Mapping, Cloth </h3>
+		<img src="displacement_cloth.png" width="480" height="360">
+		<p>
+			In bump mapping, we simply modify the normals of points according to the texture so that the light is reflected off of them differently,
+			and we get appearance of a texture on the image. In displacement mapping, we change the actual positions of points on the cloth as well,
+			and so we get a more three dimensional looking texture in the final rendering. Comparing the two mapping types, we see that although
+			the images look very similar, the displacement mapping image looks less flat. </p>
+		<p>
+			FILL IN COMPARISON AT DIFFERENT COARSENESS. </p>
+		<p>
+			Finally, we show the mirror shader on both the sphere and the cloth. </p>
+		<h3> Mirror Shader, Sphere </h3>
+		<img src="mirror_sphere.png" width="480" height="360">
+		<h3> Mirror Shader, Cloth </h3>
+		<img src="mirror_cloth.png" width="480" height="360">
+		
+		<h2> Link to Website </h2>
+		<a href="https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj3-2/index.html">https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/proj3-2/index.html</a> 
+	</body>
+</html>
