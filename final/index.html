@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <style>
+        body {
+            padding: 100px;
+            width: 1000px;
+            margin: auto;
+            text-align: left;
+            font-weight: 300;
+            font-family: 'Open Sans', sans-serif;
+            color: #121212;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+    </style>
+    <title>CS 184 Final Project</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+
+<body>
+
+    <h1 align="middle">CS 184: Computer Graphics and Imaging, Spring 2022</h1>
+    <h1 align="middle">Final Project: 3D Ferrofluid Simulation</h1>
+    <h2 align="middle">Andrew Wang, Eshaan Bhansali, Nate Tausik, Larry Yan</h2>
+
+    <br><br>
+
+        <div>
+
+            <p>Link to slides: <a href="https://docs.google.com/presentation/d/1UL-gYg20nueaPZhjCduAqmERcyrJs3XlnsKis5GjWQA/edit?usp=sharing">https://docs.google.com/presentation/d/1UL-gYg20nueaPZhjCduAqmERcyrJs3XlnsKis5GjWQA/edit?usp=sharing</a></p>
+
+            <h2 align="middle">Current Accomplishments</h2>
+
+            <p>
+                Currently, we have created fluid particles that behave according to the algorithm described in this
+                <a href="http://mmacklin.com/pbf_sig_preprint.pdf">paper</a>, though we currently do not have the particles
+                behaving exactly as desired.
+            </p>
+
+            <h3 align="middle">Progress</h3>
+
+            <p>
+                We began by modifying the Project 4 Clothsim code and transforming the cloth into a 3D array of fluid particles,
+                which we placed into a bounding box of planes to act as a container. We then attempted to implement Algorithm 1 from
+                <a href="http://mmacklin.com/pbf_sig_preprint.pdf">Macklin and Muller's paper</a>
+                to model particle behavior in a fluid, using the Smoothed Particle Hydrodynamics approach. In this algorithm, we first calculate the forces acting upon each particle and
+                predict a position for them. We then determine what other particles neighbor them by using a modified version of the spatial map grid from project 4. 
+                We look at particles in all the boxes adjacent to the box our current particle is in. We then
+                repeatedly do the necessary calculations to enforce incompressibility. To model the interactions between particles, we first implemented 
+                the poly6 and spiky kernel functions
+                (equations 20 and 21 from <a href="https://matthias-research.github.io/pages/publications/sca03.pdf">this paper</a>). 
+                These were used to compute the density constraints and approximate the gradient of the density constraints, respectively.
+                We then in turn use the density constraints to compute changes in the positions of the particles. We then update our particle positions to handle collisions
+                with geometry as in project 4, and then finally perform the position update to respect incompressibility.
+            </p>
+
+            <!---
+                <div align="middle">
+                    <img src="images/algorithm.png" align="middle" width="400px" />
+                    <figcaption align="middle">Algorithm 1</figcaption>
+                </div>
+            -->
+
+            <h3 align="middle">Results</h3>
+
+            <p>
+                Currently, we are able to create a cube of fluid particles within our bounding boxes. However, our implementation 
+                of the fluid particle algorithm is somewhat unstable, blowing up after a few simulation steps.
+                
+            </p>
+
+
+            <h3 align="middle">Plan Updates</h3>
+
+            <p>
+                Accounting for where we are in the project now, we have updated our plan as follows. We will try to fix our current bug and get a fully 
+                working basic fluid simulation by the end of the week. Next week will be dedicated to implementing magnetic effects. If we pull ahead
+                of schedule in either stage, we will dedicate the remaining days to implementing shaders. We will implement more complicated geometry
+                only if we are massively ahead of schedule.
+            </p>
+
+
+
+
+
+
+
+            <p>Link to writeup: <a href="">LINK</a></p>
+
+</body>
+</html>
