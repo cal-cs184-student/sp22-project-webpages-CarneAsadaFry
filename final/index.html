@@ -48,15 +48,22 @@
                 We began by modifying the Project 4 Clothsim code and transforming the cloth into a 3D array of fluid particles,
                 which we placed into a bounding box of planes to act as a container. We then attempted to implement Algorithm 1 from
                 <a href="http://mmacklin.com/pbf_sig_preprint.pdf">Macklin and Muller's paper</a>
-                to model particle behavior in a fluid, using the Smoothed Particle Hydrodynamics approach. In this algorithm, we first calculate the forces acting upon each particle and
-                predict a position for them. We then determine what other particles neighbor them by using a modified version of the spatial map grid from project 4. 
-                We look at particles in all the boxes adjacent to the box our current particle is in. We then
-                repeatedly do the necessary calculations to enforce incompressibility. To model the interactions between particles, we first implemented 
+                to model particle behavior in a fluid, using the Smoothed Particle Hydrodynamics approach. 
+                In this algorithm, we first calculated the forces acting upon each particle and
+                predicted a position for them using kinematic equations in terms of the external force and particle's velocity. 
+                We then determined what other particles neighbor a given particle by using a modified version of the spatial map grid from project 4. 
+                We look at particles in all the boxes adjacent to (and including) the box our current particle is in, and do the necessary calculations 
+                to enforce incompressibility. To model the interactions between particles, we first implemented 
                 the poly6 and spiky kernel functions
                 (equations 20 and 21 from <a href="https://matthias-research.github.io/pages/publications/sca03.pdf">this paper</a>). 
-                These were used to compute the density constraints and approximate the gradient of the density constraints, respectively.
-                We then in turn use the density constraints to compute changes in the positions of the particles. We then update our particle positions to handle collisions
-                with geometry as in project 4, and then finally perform the position update to respect incompressibility.
+                These were used to compute the density constraints and approximate the gradient of the density constraints, respectively. Specifically,
+                we use the poly6 kernel to estimate current density of the fluid around each particle, and then use this in combination with the fixed
+                target density to calculate a constraint for each particle. We then also use the spiky kernel to calculate the gradient of each constraint.
+                Then, by combining the contraints and their gradients, we can calculate a shift in the position for each particle, delta p.
+                We then update our particle positions to handle collisions
+                with geometry as in project 4, and then finally perform the position update to respect incompressibility. We iterate these steps of calculating
+                the incompressibility constraints, checking for collisions, and then updating particle positions multiple times, per simulation loop, according 
+                to a num_iters constant. Finally, we compute a new velocity using the new position and the last position.
             </p>
 
             <!---
@@ -79,18 +86,24 @@
 
             <p>
                 Accounting for where we are in the project now, we have updated our plan as follows. We will try to fix our current bug and get a fully 
+                working basic fluid simulation by the end of the week. Finishing the basic fluid simulation also involves implementing vorticity confinement
+                and viscosity, which are also described in Macklin and Muller.
+                Next week will be dedicated to implementing magnetic effects. If we pull ahead
+                of schedule in either stage, we will dedicate the remaining days to implementing shaders. We will implement more complicated geometry
+                only if we are massively ahead of schedule.
+            </p>
+
+            <h3 align="middle">Video</h3>
+
+            <p>
+                Accounting for where we are in the project now, we have updated our plan as follows. We will try to fix our current bug and get a fully 
                 working basic fluid simulation by the end of the week. Next week will be dedicated to implementing magnetic effects. If we pull ahead
                 of schedule in either stage, we will dedicate the remaining days to implementing shaders. We will implement more complicated geometry
                 only if we are massively ahead of schedule.
             </p>
 
 
-
-
-
-
-
-            <p>Link to writeup: <a href="">LINK</a></p>
+            <p>Link to writeup: <a href="https://cal-cs184-student.github.io/sp22-project-webpages-CarneAsadaFry/final/">LINK</a></p>
 
 </body>
 </html>
